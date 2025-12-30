@@ -133,6 +133,7 @@ def findLean (mod : Name) : IO FilePath := do
   let leanLib ← getLibDir (← getBuildDir)
   if let some p := relativeTo path leanLib then
     path := packagesDir / "lean4/src/lean" / p
+  IO.println s!"xxxxx findLean {path}"
   assert! ← path.pathExists
   return path
 
