@@ -115,7 +115,6 @@ def makeParentDirs (p : FilePath) : IO Unit := do
 Return the *.lean file corresponding to a module name.
 -/
 def findLean (mod : Name) : IO FilePath := do
-  IO.println s!"xxxxx findLean"
   let modStr := mod.toString
   if modStr.startsWith "«lake-packages»." then
     return FilePath.mk (modStr.replace "«lake-packages»" "lake-packages" |>.replace "." "/") |>.withExtension "lean"
@@ -123,9 +122,7 @@ def findLean (mod : Name) : IO FilePath := do
     return FilePath.mk (modStr.replace "«.lake»" ".lake" |>.replace "." "/") |>.withExtension "lean"
   if modStr == "Lake" then
     return packagesDir / "lean4/src/lean/lake/Lake.lean"
-  IO.println s!"xxxxx findLean, mod: {mod}"
   let olean ← findOLean mod
-  IO.println s!"xxxxx findLean, olean: {olean}"
   -- Remove a "build/lib/lean/" substring from the path.
   --let lean := olean.toString.replace ".lake/build/lib/lean/" ""
   --  |>.replace "build/lib/lean/" "" |>.replace "lib/lean/Lake/" "lib/lean/lake/Lake/"
@@ -135,7 +132,8 @@ def findLean (mod : Name) : IO FilePath := do
   let leanLib ← getLibDir (← getBuildDir)
   if let some p := relativeTo path leanLib then
     path := packagesDir / "lean4/src/lean" / p
-  IO.println s!"xxxxx findLean {path}"
+  if ← path.pathExists then
+    IO.println s!"xxxxx findLean, path: {path}"
   assert! ← path.pathExists
   return path
 
