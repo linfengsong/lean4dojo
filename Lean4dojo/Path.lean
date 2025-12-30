@@ -130,7 +130,7 @@ def findLean (mod : Name) : IO FilePath := do
   --let lean := olean.toString.replace ".lake/build/lib/lean/" ""
   --  |>.replace "build/lib/lean/" "" |>.replace "lib/lean/Lake/" "lib/lean/lake/Lake/"
   let lean := olean.toString.replace ".lake/build/lib/lean/" ""
-    |>.replace "build/lib/lean/" "" |>.replace "/lib/lean/" "src/lean/"
+    |>.replace "build/lib/lean/" "" |>.replace "/lib/lean/" "/src/lean/"
   let mut path := FilePath.mk lean |>.withExtension "lean"
   let leanLib ← getLibDir (← getBuildDir)
   if let some p := relativeTo path leanLib then
