@@ -6,7 +6,6 @@ import Lean4dojo.Share
 import Lean4dojo.Pp
 import Lean4dojo.Path
 import Lean4dojo.Traversal
-import Lean4dojo.Basic
 
 open Lean Elab System
 open Traversal
@@ -47,26 +46,11 @@ Trace a *.lean file.
 unsafe def processFile (path : FilePath) : IO Unit := do
   println! s!"processFile, path: {path}"
   let input ← IO.FS.readFile path
-  println! s!"enableInitializersExecution, start"
   enableInitializersExecution
-  println! s!"enableInitializersExecution, end"
-  println! s!"enableInitializersExecution, path: {path} mkInputContext: {input}"
   let inputCtx := Parser.mkInputContext input path.toString
-  println! s!"finish, mkInputContext"
-  let status : Bool ← isInitializerExecutionEnabled
   let (header, parserState, messages) ← Parser.parseHeader inputCtx
-  println! s!"finish, processHeader: {status}"
-  if messages.hasErrors then
-    for msg in messages.toList do
-      if msg.severity == .error then
-        println! "ERROR: {← msg.toString}"
-    throw $ IO.userError "Errors during import; aborting"
-
   let (env, messages) ← processHeader header {} messages inputCtx
 
-  let status2 : Bool ← isInitializerExecutionEnabled
-
-  println! s!"finish, processHeader2: {status2}"
   if messages.hasErrors then
     for msg in messages.toList do
       if msg.severity == .error then
@@ -74,9 +58,7 @@ unsafe def processFile (path : FilePath) : IO Unit := do
     throw $ IO.userError "Errors during import; aborting"
 
   let env := env.setMainModule (← moduleNameOfFileName path none)
-  println! s!"after env"
   let commandState := { Command.mkState env messages {} with infoState.enabled := true }
-   println! s!"after commandState"
   let s ← IO.processCommands inputCtx parserState commandState
   let env' := s.commandState.env
   let commands := s.commands.pop -- Remove EOI command.
@@ -122,7 +104,7 @@ def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
 /--
 Trace all *.lean files in the current directory whose corresponding *.olean file exists.
 -/
-def processAllFiles (noDeps : Bool) : IO Unit := do
+def processAllFile (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
   IO.println s!"processAllFiles, noDeps, {noDeps}!"
   IO.println s!"processAllFiles, {hello}!"
   let cwd ← IO.currentDir
@@ -133,7 +115,7 @@ def processAllFiles (noDeps : Bool) : IO Unit := do
   for path in ← System.FilePath.walkDir cwd do
     if ← shouldProcess path noDeps then
       let t ← IO.asTask $ IO.Process.run
-        {cmd := "lake", args := #["env", "lean", "--run", "lean4dojo/ExtractData.lean", path.toString]}
+        {cmd := "lake", args := #["env", "lean", "--run", extractLeanPath, path.toString]}
       tasks := tasks.push (t, path)
 
   for (t, path) in tasks do
@@ -144,13 +126,3 @@ def processAllFiles (noDeps : Bool) : IO Unit := do
       pure ()
       -- throw e
     | Except.ok _ => pure ()
-
---unsafe def main (args : List String) : IO Unit := do
---  match args with
---  | ["noDeps"] => processAllFiles (noDeps := true)
---  | [path] => processFile (← Path.toAbsolute ⟨path⟩)
---  | [] => processAllFiles (noDeps := false)
---  | _ => throw $ IO.userError "Invalid arguments"
-
---def main : IO Unit :=
--- IO.println s!"Hello, {hello}!"
