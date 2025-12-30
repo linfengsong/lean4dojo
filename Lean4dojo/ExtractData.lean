@@ -50,7 +50,6 @@ unsafe def processFile (path : FilePath) : IO Unit := do
   println! s!"enableInitializersExecution, start"
   enableInitializersExecution
   println! s!"enableInitializersExecution, end"
-  let path := "/home/linfe/math/dojo/lean4-example"
   println! s!"enableInitializersExecution, path: {path} mkInputContext: {input}"
   let inputCtx := Parser.mkInputContext input path
   println! s!"finish, mkInputContext"
