@@ -51,7 +51,7 @@ unsafe def processFile (path : FilePath) : IO Unit := do
   enableInitializersExecution
   println! s!"enableInitializersExecution, end"
   println! s!"enableInitializersExecution, path: {path} mkInputContext: {input}"
-  let inputCtx := Parser.mkInputContext input path
+  let inputCtx := Parser.mkInputContext input path.toString()
   println! s!"finish, mkInputContext"
   let status : Bool ← isInitializerExecutionEnabled
   let (header, parserState, messages) ← Parser.parseHeader inputCtx
