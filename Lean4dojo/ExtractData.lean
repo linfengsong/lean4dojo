@@ -83,8 +83,14 @@ unsafe def processFile (path : FilePath) : IO Unit := do
 /--
 Whether a *.lean file should be traced.
 -/
-def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
+def shouldProcess (path : FilePath) (extractLeanPath : String) (noDeps : Bool) : IO Bool := do
   if (← path.isDir) ∨ path.extension != "lean" then
+    return false
+
+  let fileName := path.fileName
+  if fileName == "lakefile.lean" then
+    return false
+  if fileName == extractLeanPath then
     return false
 
   let pathStr := path.toString
@@ -115,7 +121,7 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
 
   let mut tasks := #[]
   for path in ← System.FilePath.walkDir cwd do
-    if ← shouldProcess path noDeps then
+    if ← shouldProcess path extractLeanPath noDeps then
       let t ← IO.asTask $ IO.Process.run
         {cmd := "lake", args := #["env", "lean", "--run", extractLeanPath, path.toString]}
       tasks := tasks.push (t, path)
