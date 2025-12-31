@@ -88,7 +88,7 @@ def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
     return false
 
   let pathStr := path.toString
-  if (pathStr.replace "/lean4dojo/Lean4dojo/" "") != pathStr then
+  if (pathStr.replace "/lean4dojo/" "") != pathStr then
     return false
 
   let cwd ← IO.currentDir
@@ -109,10 +109,9 @@ def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
 Trace all *.lean files in the current directory whose corresponding *.olean file exists.
 -/
 def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
-  IO.println s!"processAllFiles, extractLeanPath: {extractLeanPath}, noDeps: {noDeps}!"
+  IO.println s!"processAllFiles, extractLeanPath: {extractLeanPath}, noDeps: {noDeps}, at {cwd}"
   let cwd ← IO.currentDir
   assert! cwd.fileName != "lean4"
-  println! "Extracting data at {cwd} with run lean: {extractLeanPath}"
 
   let mut tasks := #[]
   for path in ← System.FilePath.walkDir cwd do
