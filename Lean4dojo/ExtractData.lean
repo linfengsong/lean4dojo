@@ -129,5 +129,5 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
       pure ()
       -- throw e
     | Except.ok _ =>
-      println! s!"INFO: Success to process {path}
+      println! s!"INFO: Success to process {path}"
       pure ()
