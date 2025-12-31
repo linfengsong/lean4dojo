@@ -109,8 +109,8 @@ def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
 Trace all *.lean files in the current directory whose corresponding *.olean file exists.
 -/
 def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
-  IO.println s!"processAllFiles, extractLeanPath: {extractLeanPath}, noDeps: {noDeps}, at {cwd}"
   let cwd ← IO.currentDir
+  IO.println s!"processAllFiles, extractLeanPath: {extractLeanPath}, noDeps: {noDeps}, at {cwd}"
   assert! cwd.fileName != "lean4"
 
   let mut tasks := #[]
