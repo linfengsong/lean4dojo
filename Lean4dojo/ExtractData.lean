@@ -87,7 +87,8 @@ def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
   if (← path.isDir) ∨ path.extension != "lean" then
     return false
 
-  if path.toString.toSlice.contains "/lean4dojo/Lean4dojo/" then
+  let pathStr := path.toString
+  if (text.replace "/lean4dojo/Lean4dojo/" "") != text then
     return false
 
   let cwd ← IO.currentDir
