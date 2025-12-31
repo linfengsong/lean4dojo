@@ -124,8 +124,10 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
   for (t, path) in tasks do
     match ← IO.wait t with
     | Except.error e =>
-      println! s!"WARNING: Failed to process {path} {e}"
+      println! s!"WARNING: Failed to process {path}, {e}, {t}"
       println! s!"WARNING: task {t.get}"
       pure ()
       -- throw e
-    | Except.ok _ => pure ()
+    | Except.ok _ =>
+      println! s!"INFO: Success to process {path}
+      pure ()
