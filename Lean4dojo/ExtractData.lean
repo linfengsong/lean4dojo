@@ -112,7 +112,7 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
   IO.println s!"processAllFiles, extractLeanPath: {extractLeanPath}, noDeps: {noDeps}!"
   let cwd ← IO.currentDir
   assert! cwd.fileName != "lean4"
-  println! "Extracting data at {cwd}"
+  println! "Extracting data at {cwd} with run lean: {extractLeanPath}"
 
   let mut tasks := #[]
   for path in ← System.FilePath.walkDir cwd do
@@ -124,8 +124,7 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
   for (t, path) in tasks do
     match ← IO.wait t with
     | Except.error e =>
-      println! s!"WARNING: Failed to process {path}, {e}, {t}"
-      println! s!"WARNING: task {t.get}"
+      println! s!"WARNING: Failed to process {path}, {e}, {t.get}"
       pure ()
       -- throw e
     | Except.ok _ =>
