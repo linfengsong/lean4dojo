@@ -97,7 +97,7 @@ def shouldProcess (path : FilePath) (noDeps : Bool) : IO Bool := do
   let some oleanPath := Path.toBuildDir "lib/lean" relativePath "olean" |
     throw $ IO.userError s!"Invalid path: {path}"
   
-  if oleanPath.toString.contains "/lean4dojo/Lean4dojo/" then
+  if (← oleanPath.toString).contains "/lean4dojo/Lean4dojo/" then
     return false
 
   if ¬ (← oleanPath.pathExists) then
