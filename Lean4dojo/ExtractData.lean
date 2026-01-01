@@ -64,7 +64,6 @@ unsafe def processFile (path : FilePath) : IO Unit := do
   let commands := s.commands.pop -- Remove EOI command.
   let trees := s.commandState.infoState.trees.toArray
 
-  println! s!"processFile, commands: {commands}"
   let traceM := (traverseForest trees env').run' ⟨#[header] ++ commands, #[], #[]⟩
   let (trace, _) ← traceM.run'.toIO {fileName := s!"{path}", fileMap := FileMap.ofString input} {env := env}
 
@@ -79,6 +78,8 @@ unsafe def processFile (path : FilePath) : IO Unit := do
   let dep_path := Path.toBuildDir "ir" relativePath "dep_paths" |>.get!
   Path.makeParentDirs dep_path
   IO.FS.writeFile dep_path (← getImports header)
+
+  println! s!"INFO: Success to process {path}"
 
 /--
 Whether a *.lean file should be traced.
