@@ -79,7 +79,7 @@ unsafe def processFile (path : FilePath) : IO Unit := do
   Path.makeParentDirs dep_path
   IO.FS.writeFile dep_path (← getImports header)
 
-  println! s!"INFO: Success to process {path}"
+  println! s!"INFO: Success to process: {path}"
 
 /--
 Whether a *.lean file should be traced.
@@ -134,5 +134,5 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
       pure ()
       -- throw e
     | Except.ok _ =>
-      println! s!"INFO: Success to process {path}"
+      println! s!"INFO: Success to process path: {path}"
       pure ()
