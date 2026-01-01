@@ -136,3 +136,10 @@ def processAllFiles (extractLeanPath : String) (noDeps : Bool) : IO Unit := do
     | Except.ok _ =>
       println! s!"INFO: Success to process path: {path}"
       pure ()
+
+unsafe def process (extractLeanPath : String) (args : List String) : IO Unit := do
+  match args with
+  | ["noDeps"] => processAllFiles (extractLeanPath := "LeanDojoExtract.lean") (noDeps := false)
+  | [path] => processFile (← Path.toAbsolute ⟨path⟩)
+  | [] => processAllFiles (extractLeanPath := "LeanDojoExtract.lean") (noDeps := false)
+  | _ => throw $ IO.userError "Invalid arguments"
