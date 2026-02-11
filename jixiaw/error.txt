@@ -1,0 +1,26 @@
+error while processing ('Mathlib', 'Data', 'Prod', 'Basic'): libc++abi: terminating due to uncaught exception of type lean::exception: cannot evaluate `[init]` declaration 'Prod.PrettyPrinting.pp.numericProj.prod' in the same module
+
+Loading 6998 modules into the database                                                                         
+error while processing ('Init', 'WF'): uncaught exception: unexpected internal error: Unknown constant `«term_×'__1»`
+
+Loading 439 modules into the database
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/linfe/math/jixiaw/LeanSearch/database/__main__.py", line 17, in <module>
+    main()
+  File "/home/linfe/math/jixiaw/LeanSearch/database/__init__.py", line 51, in main
+    load_data(project, prefixes, conn)
+  File "/home/linfe/math/jixiaw/LeanSearch/database/jixia_db.py", line 170, in load_data
+    load_symbol(m)
+  File "/home/linfe/math/jixiaw/LeanSearch/database/jixia_db.py", line 48, in load_symbol
+    symbols = [s for s in project.load_info(module, Symbol) if not is_internal(s.name)]
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linfe/math/jixiaw/jixia_py/src/jixia/run.py", line 196, in load_info
+    return cls.from_json_file(self.output_dir / filename)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/linfe/math/jixiaw/jixia_py/src/jixia/structs.py", line 62, in from_json_file
+    with open(filename) as fp:
+         ^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/linfe/math/jixiaw/lean_test/.jixia/Mathlib.Data.Prod.Basic.sym.json'
+
