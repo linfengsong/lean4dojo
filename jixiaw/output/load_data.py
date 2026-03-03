@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from pathlib import Path
@@ -5,6 +6,7 @@ from argparse import ArgumentParser
 
 from jixia import LeanProject
 from jixia.structs_debug import parse_name
+from sympy import python
 
 _LEAN4_TOOLCHAINS_DIR = Path(".elan/toolchains")
 
@@ -57,11 +59,34 @@ def main():
         results = project.batch_run_jixia(
             base_dir=d,
             prefixes=prefixes,
-            plugins=["module", "declaration", "symbol","elaboration", "ast", "line"],
+            plugins=["module", "declaration", "symbol", "ast", "line"],
+            force=True,
         )
-        print(results)
+        #print(f"Results for {d} with plugins module, declaration, symbol, ast, line:")
+        #print(results)
+        #print(json.dumps(results, indent=2))
+        
+        results = project.batch_run_jixia(
+            base_dir=d,
+            prefixes=prefixes,
+            plugins=["elaboration"],
+            force=True,
+        )
+        #print(f"Results for {d} with elaboration:")
+        #print(results)
+
 
 if __name__ == "__main__":
+    #python load_data.py jixia /home/linfe/math/lean_test LeanTest
     # python load_data.py jixia /home/linfe/math/lean_test Init,Mathlib,LeanTest
     # python load_data.py jixia /home/linfe/math/lean_test Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+    # python load_data.py jixia /home/linfe/math/lean_test Mathlib.MeasureTheory.Measure.Real
+    # python load_data.py jixia /home/linfe/math/lean_test Init.Grind.Ordered.Field
+    # python load_data.py jixia /home/linfe/math/lean_test Mathlib.Topology.Algebra.Order.LiminfLimsup
+    # python load_data.py jixia /home/linfe/math/lean_test Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
+    # python load_data.py jixia /home/linfe/math/lean_test Mathlib.LinearAlgebra.Basis.Submodule
+    # python load_data.py jixia /home/linfe/math/lean_test Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+
+    #import logging
+    #logging.basicConfig(level=logging.DEBUG)
     main()

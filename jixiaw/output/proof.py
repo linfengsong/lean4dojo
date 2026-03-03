@@ -1,19 +1,18 @@
 import json
 import os
 import re
-import copy
 from pathlib import Path
 from dataclasses import dataclass
-from typing import Any, Self
 from jixia import LeanProject
-from jixia.structs import Declaration, DeclarationRoot, StringRange, InfoTree, InfoTreeRoot,LineModel, LineModelRoot, RootModel,Plugin
+from jixia.structs import Declaration, StringRange, InfoTree, LineModel, Plugin
+from .util import getLeanSourceDirOrFile, collect_match_modules
 
 @dataclass(frozen=True, order=True)
 class FilePos:
     line: int
     column: int
 
-@dataclass(frozen=True, order=True)
+@dataclass(frozen=True)
 class FileRange:
     start: FilePos
     stop: FilePos
@@ -40,6 +39,9 @@ class FileRange:
             lineNum = index + 1
         column = charPos - start + 1
         return FilePos(lineNum, column)
+    
+    def __lt__(self, other):
+        return self.start < other.start or self.start == other.start and self.stop >= other.stop
     
     def inRange(self, fileRange):
         return self.start <= fileRange.start and fileRange.stop <= self.stop
@@ -88,6 +90,7 @@ class Theorem:
 
     proof: str
     proofFileRange: FileRange
+    proofType: str
     
     proofTactic: RootTactic
     tactics: list[RootTactic]
@@ -132,43 +135,6 @@ def collect_sub_tactics(nodes: list, lines, previousFileRange = None):
             
     return sub_tactics
 
-def print_inforTree(fileRange: FileRange, lines: list, infoTrees: list, maxLevel: int = 8, level: int = 0):
-    for infoTree in infoTrees:
-        infoTreeFileRange = FileRange.fromStringRange(lines, infoTree.ref.range)
-        if fileRange.inRange(infoTreeFileRange):
-            print(f"ooo infoTree: {level} {infoTree.ref} {len(infoTree.children)} {infoTree.info}")
-            if level < maxLevel and infoTree.info.simple:
-                print_inforTree(infoTreeFileRange, lines, infoTree.children, maxLevel, level + 1)
-    
-def collect_all_macros(nodes: list, lines: list, module_name):
-    macros = []
-    #kind = ['Lean', 'Parser', 'Term', 'app']
-    for node in nodes:
-        if node.info and node.info.macro and node.info.macro.expanded and node.info.macro.expanded.range: #and node.info.macro.expanded.kind == kind:
-            fileRange = FileRange.fromStringRange(lines, node.info.macro.expanded.range)
-            macro = {
-                "fileRange": fileRange,
-                "macro": node.info.macro
-            }
-            macros.append(macro)
-        if node.children:
-            macros.extend(collect_all_macros(node.children, lines, module_name))
-    return macros
-
-def find_macros(fileRange: FileRange, macros: list):
-    ms = []
-    for macro in macros:
-        if fileRange.inRange(macro["fileRange"]):
-            ms.append(macro)
-    return ms
-
-def print_macro(fileRange: FileRange, macros: list):
-    for macro in macros:
-        if fileRange.inRange(macro["fileRange"]):
-            print(f"macro: {macro}")
-
-
-
 def collect_all_terms(nodes: list, lines: list, module_name):
     terms = []
     for node in nodes:
@@ -186,17 +152,30 @@ def find_term(fileRange: FileRange, ident: str, terms: list[Term]):
             return term
     return None
 
-def print_term(fileRange: FileRange, terms: list[Term]):
-    for term in terms:
-        if fileRange.inRange(term.fileRange):
-            print(f"{fileRange} term: {term}")
+def collect_all_tactics(nodes: list, lines: list):
+    tactics = []
+    for node in nodes:
+        if node.info and node.info.tactic:
+            tactic = createTactic(node.ref, node.info.tactic, lines)
+            sub_tactics = collect_sub_tactics(node.children, lines)
+            rootTactic = RootTactic(tactic.fileRange, tactic.pp, tactic.before, tactic.after, sub_tactics)
+            tactics.append(rootTactic)
+            return tactics
+        elif node.children:
+            tactics.extend(collect_all_tactics(node.children, lines))
+    return sorted(tactics, key=lambda x: x.fileRange, reverse=False)
+
+def find_root_tactrics(fileRange: FileRange, rootTactics: list[RootTactic]):
+    tactics = []
+    for rootTactic in rootTactics:
+        if fileRange.inRange(rootTactic.fileRange):
+            tactics.append(rootTactic)
+    return tactics
 
 def find_all_terms(nodes: list, pp: str):
     founds = []
     for node in nodes:
-        #if node.ref and node.ref.pp == pp:
         if node.ref and pp in node.ref.pp:
-            #print(f"xxxx   {node.ref.pp}")
             item = {
                 "node": node, 
                 "children": []
@@ -209,26 +188,8 @@ def find_all_terms(nodes: list, pp: str):
                     "node": node, 
                     "children": sub_founds
                 }
-                #print(len(sub_founds))
                 founds.append(item)
     return founds
-
-def print_terms(terms: list, level = 1):
-    for term in terms:
-        node = term['node']
-        children = term['children']
-        print(f"{level} {node.info} {node.ref}")
-        #print(f"{level} {term}")
-        print_terms(children, level + 1)
-
-def getLeanSourceFile(project, module_name: list[str]):
-    if module_name[0].startswith("Mathlib"):
-        root_path = str(project.root) + "/.lake/packages/mathlib"
-    elif module_name[0].startswith("Init"):
-        root_path = "/home/linfe/.elan/toolchains/leanprover--lean4---v4.24.0/src/lean"
-    else:
-        root_path = str(project.root)
-    return root_path + "/" + "/".join(module_name).replace(".", "/") + ".lean"
 
 def extractLine(line: str, start: int, stop: int = -1):
     buf = bytes(line, encoding='utf-8')
@@ -238,7 +199,10 @@ def extractLine(line: str, start: int, stop: int = -1):
     return buf.decode('utf-8') 
 
 def getLeanSourceCode(project, module_name: list[str], fileRange: FileRange):
-    file_path = getLeanSourceFile(project, module_name)
+    file_path = getLeanSourceDirOrFile(project, module_name, True)
+    if file_path is None:
+        raise "Cannot find module_name: {module_name}"
+
     with open(file_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         target_lines = lines[fileRange.start.line - 1 : fileRange.stop.line]
@@ -251,53 +215,6 @@ def getLeanSourceCode(project, module_name: list[str], fileRange: FileRange):
             target_lines[-1] = extractLine(target_lines[-1], 0, fileRange.stop.column)
             return "".join(target_lines)
 
-def simplify_tree(data: Any):
-    if not isinstance(data, dict):
-        return data
-
-    # 先遞迴處理所有的子節點
-    if "children" in data and isinstance(data["children"], list):
-        data["children"] = [simplify_tree(c) for c in data["children"]]
-        
-        # 壓縮邏輯：如果只有一個小孩，且小孩的內容是我們想要的
-        # 範例：如果 children[0] 也有 children，直接跳過中間這層
-        while len(data["children"]) == 1:
-            child = data["children"][0]
-            if isinstance(child, dict) and "children" in child:
-                # 將孫子提拔為兒子
-                data["children"] = child["children"]
-                # 可選擇性合併 pp 或 range 資訊
-                data["pp"] = data.get("pp") or child.get("pp")
-            else:
-                break
-                
-    return data
-
-def collect_all_tactics(nodes: list, lines: list):
-    """
-    遞迴遍歷整個 InfoTree 列表，將所有隱藏在深處的 tactic 抽出來。
-    """
-    tactics = []
-    for node in nodes:
-        if node.info and node.info.tactic:
-            tactic = createTactic(node.ref, node.info.tactic, lines)
-            sub_tactics = collect_sub_tactics(node.children, lines)
-            #if "f', hf'⟩ := f.exists_leftInverse_of_injective (ker_eq_bot.mpr hf)" in tactic.pp:
-            #    print(f"   xxxxx {tactic.pp}")
-            rootTactic = RootTactic(tactic.fileRange, tactic.pp, tactic.before, tactic.after, sub_tactics)
-            tactics.append(rootTactic)
-            return tactics
-        if node.children:
-            tactics.extend(collect_all_tactics(node.children, lines))
-    return sorted(tactics, key=lambda x: x.fileRange, reverse=False)
-
-def find_root_tactrics(fileRange: FileRange, rootTactics: list[RootTactic]):
-    tactics = []
-    for rootTactic in rootTactics:
-        if fileRange.inRange(rootTactic.fileRange):
-            tactics.append(rootTactic)
-    return tactics
-
 def getToken(line: str, index: int):
     tokens = line.strip().replace("\n", " ").replace("\r", " ").replace("\t", " ").split()
     if index < 0:
@@ -306,11 +223,20 @@ def getToken(line: str, index: int):
         return None
     return tokens[index]
 
+def getTheoremName(module_name: list[str], decl: Declaration):
+    #first item is "_private" if it's a private declaration, we need to remove the prefix and get the real name
+    # for example, if the declaration name is ["_private", "Init", "Nat", "add"], and the module name is ["Init", "Nat"], we need to remove the prefix and get the real name "add"  
+    if decl.name is None or len(decl.name) == 0:
+        return None
+    if decl.name[0] != '_private':
+        return ".".join(decl.name)
+    private_name = decl.name[len(module_name) + 2:]
+    return ".".join(private_name)
+
 # =============================
 # Extract Theorems
 # =============================
 def extract_theorem_signature_proof(project, module_name, lines, signature_start, theorem_stop):
-    # does not allow define Theorem in Theorem's signature. It is kind of save to find by ":=""
     fileRange = FileRange.fromStringRange(lines, StringRange(signature_start, theorem_stop))
     text = getLeanSourceCode(project, module_name, fileRange)
     text = text.replace("\t", " ").replace("\n", " ").replace("\r", " ")
@@ -326,37 +252,28 @@ def extract_theorem_signature_proof(project, module_name, lines, signature_start
     return signature_fileRange, proof_fileRange
 
 def extract_theorems(project, module_name):
-    if not project.has_info(module_name, DeclarationRoot) or not project.has_info(module_name, InfoTreeRoot):
+    if not project.has_info(module_name, Declaration) or not project.has_info(module_name, InfoTree):
         return []
-    declarations = project.load_info(module_name, DeclarationRoot) #\Declaration)
-    infoTrees = project.load_info(module_name, InfoTreeRoot)
-    if project.has_info(module_name, LineModelRoot):
-        lines = project.load_info(module_name, LineModelRoot)
+    declarations = project.load_info(module_name, Declaration)
+    infoTrees = project.load_info(module_name, InfoTree)
+    if project.has_info(module_name, LineModel):
+        lines = project.load_info(module_name, LineModel)
     else:
         lines = []
     rootTactics = collect_all_tactics(infoTrees, lines)
-    macros = collect_all_macros(infoTrees, lines, module_name)
     terms = collect_all_terms(infoTrees, lines, module_name)
-    #search_pp ="have ⟨f', hf'⟩ := f.exists_leftInverse_of_injective (ker_eq_bot.mpr hf)\n  ⟨φ.comp f', ext fun x ↦ congr(φ <| $hf"
-    #search_pp = "⟨φ.comp f', ext fun x ↦ congr(φ <| $hf"
-    #search_pp = "Function.Surjective f.dualMap := fun φ "
-    #search_result = find_all_terms(infoTrees, search_pp)
-    #print_terms(search_result)
-    #with open("search_result.json", "w") as json_file:
-    #    json.dump(search_result, json_file, indent=2)
     theorems = []
     for _, decl in enumerate(declarations):
         if decl.kind == "theorem":
-            #### need handle theorem is private
-            if len(decl.name) == 0 or decl.name[0] == '_private':
+            if len(decl.name) == 0:
                 continue;
-            theorem = extract_theorem(project, module_name, decl, lines, rootTactics, macros, terms, infoTrees)
+            theorem = extract_theorem(project, module_name, decl, lines, rootTactics, terms)
             if theorem is not None:
                 theorems.append(theorem)
     return theorems
 
-def extract_theorem(project, module_name, decl, lines, rootTactics, macros, terms, infoTrees):
-    theorem_name = ".".join(decl.name)
+def extract_theorem(project, module_name, decl, lines, rootTactics, terms):
+    theorem_name = getTheoremName(module_name, decl)
     theorem_range = FileRange.fromStringRange(lines, decl.ref.range)
     tactics = find_root_tactrics(theorem_range, rootTactics)
 
@@ -370,33 +287,9 @@ def extract_theorem(project, module_name, decl, lines, rootTactics, macros, term
         statement = getLeanSourceCode(project, module_name, theorem_proofRange)
 
     proofOperator = getToken(statement, 0)
-
-    if proofOperator != ":=" and proofOperator != "|":
-        #print(f"module_name: {module_name}, theorem_name: {theorem_name}, proofOperator: {proofOperator} {theorem_range}")
-        #print(f"proofOperator: {proofOperator}")
-        #print(f"xxxx signatureRange: {signatureRange}, {decl.signature.pp}")
-        #print(f"xxxx theorem_proofRange: {theorem_proofRange}, {decl.value.pp}")
-        #print_inforTree(theorem_range, lines, infoTrees)
-        #print_macro(theorem_range, macros)
-        #print_term(theorem_range, terms)
-        # Get proof from tactic:
-        sigRange, proofRange = extract_theorem_signature_proof(project, module_name, lines, decl.signature.range.start, decl.ref.range.stop)
-        if sigRange is not None and proofRange is not None:
-            signatureRange = sigRange
-            signature = getLeanSourceCode(project, module_name, signatureRange)
-            theorem_proofRange = proofRange
-            statement = getLeanSourceCode(project, module_name, theorem_proofRange)
-            proofOperator = getToken(statement, 0)
-        # else:
-        #    fileRange = FileRange.fromStringRange(lines, StringRange(decl.signature.range.start, decl.ref.range.stop))
-        #    print(f"xxxxx fail to find := in proof at: {module_name}, {theorem_name}, {fileRange}")
-        #print(f"yyyy theorem_proofRange: {proofOperator} {theorem_proofRange}, {statement}")
-        #print(f"yyyy theorem_proofRange: {proofOperator} {signatureRange}, {signature}")
-
-    #else:
-    #    print(f"module_name: {module_name}, theorem_name: {theorem_name}, proofOperator: {proofOperator}")
-    #    print(f"yyyy signatureRange: {signatureRange}, {decl.signature.pp}")
-    #    print(f"yyyy theorem_proofRange: {theorem_proofRange}, {decl.value.pp}")
+    if proofOperator != ":=" and proofOperator != "|" and proofOperator != "where":
+        print(f"xxxxx proofOperator {proofOperator}  is not valid, remove: {theorem_name} {module_name}")
+        return None
 
     if statement is None:
         print(f"xxxxx no proof, remove: {theorem_name} {module_name}")
@@ -405,7 +298,7 @@ def extract_theorem(project, module_name, decl, lines, rootTactics, macros, term
         print(f"xxxxx no proofOperator, remove: {theorem_name} {module_name}")
         return None
     
-    statement = statement.rstrip()[len(proofOperator):].rstrip()
+    statement = statement.rstrip()[len(proofOperator) + 1:].lstrip()
     startBy = True
     byToken = getToken(statement, 0)
     if byToken is None or byToken != "by":
@@ -415,14 +308,16 @@ def extract_theorem(project, module_name, decl, lines, rootTactics, macros, term
     tactic_before = None
     tactic_after = None
     proofTactic = None
+    proofType = "Term"
     if startBy:
+        proofType = "Tactic"
         if len(tactics) > 0:
             proofTactic = tactics.pop(0)
             tactic_before = proofTactic.before
             tactic_after = proofTactic.after
 
     if proofTactic is None:
-        name_array = copy.deepcopy(decl.name)
+        name_array = theorem_name.split(".")
         term = None
         while term is None and len(name_array) > 0:
             search_name = ".".join(name_array)
@@ -432,35 +327,28 @@ def extract_theorem(project, module_name, decl, lines, rootTactics, macros, term
                 term = find_term(theorem_range, search_name, terms)
             name_array.pop(0)
         if term is None:
-            search_name = "_root_." + ".".join(decl.name)
+            search_name = "_root_." + theorem_name
             term = find_term(theorem_range, search_name, terms)
             if term is None:
                 search_name = "@" + search_name
                 term = find_term(theorem_range, search_name, terms)
         if term is None:
-            search_name = "«" + decl.name[len(decl.name) - 1] + "»"
+            search_name = "«" + theorem_name.split('.')[-1] + "»"
             term = find_term(theorem_range, search_name, terms)
             if term is None:
                 search_name = "@" + search_name
                 term = find_term(theorem_range, search_name, terms)
 
         if term is not None:
-            #print(f"decl.name: {decl.name}")
-            #print_term(signatureRange, terms)
-            #print(f"result term: {term}")
             tactic_before = term.type
+        elif startBy:
+            print(f"xxxxx ERROR tactic_before is none on Tactic: {theorem_name} {module_name}")
         else:
-            print(f"xxxxx tactic_before is none, remove: {theorem_name} {module_name}")
-            #print_term(theorem_range, terms)
+            if decl.name[0] != '_private':
+                print(f"xxxxx tactic_before is none, remove: {theorem_name} {module_name}")
             return None
 
-        #if term is None:
-            #print_term(theorem_range, terms)
-            #macros = find_macros(theorem_range, macros)
-            #for macro in macros:
-            #    print(f"MMMM {macro}")
-                
-    return Theorem(theorem_range, theorem_name, signature, signatureRange, proofOperator, theorem_proof, theorem_proofRange, proofTactic, tactics, tactic_before, tactic_after)
+    return Theorem(theorem_range, theorem_name, signature, signatureRange, proofOperator, theorem_proof, theorem_proofRange, proofType, proofTactic, tactics, tactic_before, tactic_after)
 
 def get_pos_dict(pos):
     return {"line": pos.line, "column": pos.column}
@@ -493,15 +381,17 @@ def create_rootTacitic_data(rootTactic):
     root_tactic_data["tactics"] = children
     return root_tactic_data
 
-def process_module(fd, project, module_name, operatorSet):
+def process_module(project, module_name, operatorSet):
     theorems = extract_theorems(project,module_name)
     name = ".".join(module_name)
+    lines = []
     for theorem in theorems:
         theorem_name = theorem.name
         theorem_signature = theorem.signature
         theorem_operator = theorem.proofOperator
         theorem_proof = theorem.proof
         theorem_proofFileRange = theorem.proofFileRange
+        theorem_proofType = theorem.proofType
         tactic_before = theorem.tactic_before
         tactic_after = theorem.tactic_after
         start = theorem_proofFileRange.start
@@ -515,14 +405,13 @@ def process_module(fd, project, module_name, operatorSet):
         if tactic_after is None or len(tactic_after) == 0:
             tactic_after = "no goals"
 
-        #print(f"tactic_before: {tactic_before}, tactic_after: {tactic_after}")
-
         data = {
             "module": name,
             "theorem": theorem_name,
             "teorem_signature:": theorem_signature,
             "theorem_operator": theorem_operator,
             "theorem_proof": theorem_proof,
+            "theorem_proofType": theorem_proofType,
             "tactic_before:": tactic_before,
             "tactic_after": tactic_after,
             "start": get_pos_dict(start),
@@ -534,57 +423,61 @@ def process_module(fd, project, module_name, operatorSet):
         if len(rootTactic_list) > 0:
             data["ref_tactics"] = rootTactic_list
 
-        # 寫入 JSONL
-        fd.write(json.dumps(data, ensure_ascii=False) + '\n')
-
+        lines.append(json.dumps(data, ensure_ascii=False))
         if theorem_operator in operatorSet:
             count =  operatorSet[theorem_operator] + 1
         else:
             count = 1
         operatorSet[theorem_operator] = count
+    return lines
 
-def process_dir(fd, project, root_dir, operatorSet, prefix: str = None):
+def process_searches(working_dir: str, search_list: list[str]):
+    output_dir = working_dir + "/.jixiaw"
+    os.makedirs(output_dir, exist_ok=True)
+    project = LeanProject(working_dir)
+    modules = []
+    for search in search_list:
+        modules.extend(collect_match_modules(project, search))
 
-    root_path = Path(root_dir)
-
-    
-    for lean_path in root_path.rglob("*.lean"):
-        name = lean_path.relative_to(root_path).with_suffix("").as_posix().replace("/", ".")
-        if not prefix is None and not name.startswith(str(prefix)):
-            continue
-        #try:
-        module_name = name.split(",")
-        process_module(fd, project, module_name, operatorSet)
-        #except Exception as e:
-        #    print(f"xxxxxx An error occurred to get traced file from: lean path: {lean_path}, {e}")
-
-    
-
-if __name__ == "__main__":
-    TOOLCHAIN_ROOT = "/home/linfe/.elan/toolchains/leanprover--lean4---v4.24.0"
-    WORKING_DIR = "/home/linfe/math/lean_test"
-    OUTPUT_DIR = WORKING_DIR + "/.jixiaw"
-
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    project = LeanProject(WORKING_DIR)
     operatorSet = {":=": 0}
-    with open(OUTPUT_DIR + "/ast.jsonl", 'w', encoding='utf-8') as fd:
-        process_dir(fd, project, WORKING_DIR, operatorSet, "LeanTest")
-        process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet)#, "Mathlib.MeasureTheory.PiSystem" )
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries" ) ## 292 set_option maxHeartbeats 0
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.MeasureTheory.Measure.Support")
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.RingTheory.Kaehler.Polynomial")
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.Algebra.Category.CommAlgCat.Monoidal")
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.MeasureTheory.Constructions.BorelSpace.Order")
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.Tactic.CC.Addition")
-        #process_dir(fd, project, WORKING_DIR + "/.lake/packages/mathlib", operatorSet, "Mathlib.LinearAlgebra.Dual.Lemmas")
-        process_dir(fd, project, TOOLCHAIN_ROOT + "/src/lean", operatorSet, "Init")
+    #with open(output_dir + "/ast.jsonl", 'w', encoding='utf-8') as fd:
+    #    for module in modules:
+    #        lines = process_module(project, module, operatorSet)
+    #        for line in lines:
+    #            fd.write(f'{line}\n')
+    for module_name in modules:
+        module_str = ".".join(module_name)
+        path = f"{output_dir}/{module_str}.jsonl"
+        with open(path, 'w', encoding='utf-8') as fd:
+            lines = process_module(project, module_name, operatorSet)
+            fd.write('\n'.join(lines) + '\n')
 
     print(f"Theorem Operator Set: {operatorSet}")
 
-    #module_name = ("LeanTest","Basic")
-    
-    #module = project.load_module_info(fd, module_name)
-    #process_module(project, module_name)
+if __name__ == "__main__":
+    search_list = [
+        #"Init",
+        #"Mathlib",
+        "LeanTest",
+        #Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary"
+        #"Mathlib.Topology.Algebra.Order.LiminfLimsup",
+        #"Init.Grind.Ordered.Field",
+        #"Mathlib.MeasureTheory.Measure.Real",
+        #"Mathlib.Data.List.InsertIdx",
+        #"Mathlib.Analysis.Analytic.IteratedFDeriv"
+        #"Mathlib.MeasureTheory.PiSystem",
+        #"Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries",
+        #"Mathlib.MeasureTheory.Measure.Support",
+        #"Mathlib.RingTheory.Kaehler.Polynomial",
+        #"Mathlib.Algebra.Category.CommAlgCat.Monoidal",
+        #"Mathlib.MeasureTheory.Constructions.BorelSpace.Order",
+        #"Mathlib.Tactic.CC.Addition",
+        #"Mathlib.LinearAlgebra.Dual.Lemmas",
+        #"Mathlib.LinearAlgebra.QuadraticForm",
+        #"Mathlib.LinearAlgebra.Basis.Submodule"
+        #"Mathlib.GroupTheory.GroupAction.MultipleTransitivity"
+        #"Mathlib.RingTheory.TensorProduct.Basic"
+    ]
 
+    process_searches("/home/linfe/math/lean_test", search_list)
 
