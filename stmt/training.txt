@@ -1,0 +1,20 @@
+problem:
+3.472 Given: $\boldsymbol{A}, \boldsymbol{B}, \boldsymbol{C}$ - angles of a certain triangle. Prove:
+
+$\sin (2 n+1) A+\sin (2 n+1) B+\sin (2 n+1) C=(-1)^{n} \cdot 4 \cos \frac{2 n+1}{2} A \times$
+
+$\times \cos \frac{2 n+1}{2} B \cdot \cos \frac{2 n+1}{2} C$, where $n-$ is an integer.
+
+source:
+numinamath_olympiads
+
+formal statement:
+import Mathlib 
+
+import Aesop 
+
+set_option maxHeartbeats 0 
+
+open BigOperators Real Nat Topology Rat
+
+theorem lean_workbook (A B C : ℝ) (hA : A ∈ Set.Icc 0 Real.pi) (hB : B ∈ Set.Icc 0 Real.pi) (hC : C ∈ Set.Icc 0 Real.pi) (hab : A + B + C = Real.pi) (n : ℤ) : sin ((2 * n + 1) * A) + sin ((2 * n + 1) * B) + sin ((2 * n + 1) * C) = (-1) ^ n * 4 * cos ((2 * n + 1) / 2 * A) * cos ((2 * n + 1) / 2 * B) * cos ((2 * n + 1) / 2 * C)   := by sorry
