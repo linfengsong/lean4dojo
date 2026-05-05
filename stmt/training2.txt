@@ -1,0 +1,35 @@
+prompt:
+Complete the following Lean 4 code with explanatory comments preceding each line of code:
+
+```lean4
+import Mathlib
+import Aesop
+
+set_option maxHeartbeats 0
+
+open BigOperators Real Nat Topology Rat
+
+/-- A pirate is counting his loot in base 6. He has $4532_6$ dollars worth of silver, $1254_6$ dollars worth of pearls, and $654_6$ dollars worth of exotic spices. What is the total dollar amount of his loot? Express your answer in base 10. Show that it is 1636.-/
+theorem pirate_loot_total (silver pearls spices : ℕ) (h_silver : silver = 4 * 6 ^ 3 + 5 * 6 ^ 2 + 3 * 6 + 2)
+  (h_pears : pearls = 1 * 6 ^ 3 + 2 * 6 ^ 2 + 5 * 6 + 4) (h_spices : spices = 6 * 6 ^ 2 + 5 * 6 + 4) :
+  silver + pearls + spices = 1636 := by
+
+output:
+/-
+  To solve the problem, we need to convert the given quantities from base 6 to base 10 and then sum them up. The quantities are given as follows:
+  - Silver: \(4532_6\)
+  - Pearls: \(1254_6\)
+  - Spices: \(654_6\)
+  We convert each number from base 6 to base 10:
+  - \(4532_6 = 4 \cdot 6^3 + 5 \cdot 6^2 + 3 \cdot 6 + 2\)
+  - \(1254_6 = 1 \cdot 6^3 + 2 \cdot 6^2 + 5 \cdot 6 + 4\)
+  - \(654_6 = 6 \cdot 6^2 + 5 \cdot 6 + 4\)
+  After converting, we sum these values and verify that the total is 1636.
+  -/
+  -- Substitute the expressions for silver, pearls, and spices into the equation.
+  rw [h_silver, h_pears, h_spices]
+  -- Normalize the numerical expressions to simplify the conversion.
+  norm_num
+  -- Use linear arithmetic to verify the final sum.
+  <;> linarith
+``` 
