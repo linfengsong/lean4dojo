@@ -1,0 +1,148 @@
+module: Mathlib.Data.Int.GCD, theorem: xgcd_zero_left pass testing
+module: Mathlib.Data.Int.GCD, theorem: xgcdAux_rec pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcdA_zero_left pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcdB_zero_left pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcdA_zero_right pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcdB_zero_right pass testing
+module: Mathlib.Data.Int.GCD, theorem: xgcdAux_fst pass testing
+module: Mathlib.Data.Int.GCD, theorem: xgcdAux_val pass testing
+module: Mathlib.Data.Int.GCD, theorem: xgcd_val pass testing
+module: Mathlib.Data.Int.GCD, theorem: xgcdAux_P pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_eq_gcd_ab fails with /home/linfe/math/lean_test/.test/Mathlib.Data.Int.GCD/gcd_eq_gcd_ab.lean:17:41: error: `simp` made no progress
+/home/linfe/math/lean_test/.test/Mathlib.Data.Int.GCD/gcd_eq_gcd_ab.lean:17:55: error: `simp` made no progress
+
+---------------------- DEBUG -----------------------
+statement.name: |gcd_eq_gcd_ab| namespace: |Nat|
+    processing statement: gcd_eq_gcd_ab, Nat.gcd_eq_gcd_ab kind: theorem, id: 15, dependent_statements: {4, 5, 11, 12, 13, 14}, persistant_symbol_names: dict_keys([])
+    processing statement: gcdA, Nat.gcdA kind: definition, id: 4, dependent_statements: {3}, persistant_symbol_names: dict_keys([])
+    processing statement: xgcd, Nat.xgcd kind: definition, id: 3, dependent_statements: {0}, persistant_symbol_names: dict_keys([])
+    processing statement: xgcdAux, Nat.xgcdAux kind: definition, id: 0, dependent_statements: set(), persistant_symbol_names: dict_keys([])
+      finish processing statement: xgcdAux, request_id: 0
+      finish processing statement: xgcd, request_id: 3
+      finish processing statement: gcdA, request_id: 4
+    processing statement: gcdB, Nat.gcdB kind: definition, id: 5, dependent_statements: {3}, persistant_symbol_names: dict_keys([])
+      finish processing statement: gcdB, request_id: 5
+    processing statement: xgcdAux_val, Nat.xgcdAux_val kind: theorem, id: 11, dependent_statements: {0, 10, 3}, persistant_symbol_names: dict_keys([])
+    processing statement: xgcdAux_fst, Nat.xgcdAux_fst kind: theorem, id: 10, dependent_statements: {0, 2}, persistant_symbol_names: dict_keys([])
+    processing statement: xgcdAux_rec, Nat.xgcdAux_rec kind: theorem, id: 2, dependent_statements: {0}, persistant_symbol_names: dict_keys([])
+      finish processing statement: xgcdAux_rec, request_id: 2
+      finish processing statement: xgcdAux_fst, request_id: 10
+      finish processing statement: xgcdAux_val, request_id: 11
+    processing statement: xgcd_val, Nat.xgcd_val kind: theorem, id: 12, dependent_statements: {3, 4, 5}, persistant_symbol_names: dict_keys([])
+      finish processing statement: xgcd_val, request_id: 12
+    processing statement: P, Nat.P kind: definition, id: 13, dependent_statements: set(), persistant_symbol_names: dict_keys([])
+      finish processing statement: P, request_id: 13
+    processing statement: xgcdAux_P, Nat.xgcdAux_P kind: theorem, id: 14, dependent_statements: {0, 2, 13}, persistant_symbol_names: dict_keys([])
+      finish processing statement: xgcdAux_P, request_id: 14
+      finish processing statement: gcd_eq_gcd_ab, request_id: 15
+    add private statement: gcd_eq_gcd_ab, stmt_id: 13 from statement: 15
+statement internal_name: ['_private', 'Mathlib', 'Data', 'Int', 'GCD', 0, 'Nat', 'P'], kind: definition, theorem name: P
+statement_name: P, statementSymbol.signature_symbols is None 
+statement_name: P, value_symbols: 5
+    name: Nat, src_name: ℕ , is_private: False, prefix_safe: False, prefix_reason: Not namespace prefix, range: {"start": {"line": 109, "column": 17}, "stop": {"line": 109, "column": 18}}
+    name: Int, src_name: ℤ , is_private: False, prefix_safe: False, prefix_reason: Not namespace prefix, range: {"start": {"line": 109, "column": 21}, "stop": {"line": 109, "column": 22}}
+    name: Int, src_name: ℤ , is_private: False, prefix_safe: False, prefix_reason: Not namespace prefix, range: {"start": {"line": 109, "column": 25}, "stop": {"line": 109, "column": 26}}
+    name: Prod.mk, src_name: (r, s, t) , is_private: False, prefix_safe: False, prefix_reason: Not ident with (space),([{, range: {"start": {"line": 110, "column": 5}, "stop": {"line": 110, "column": 14}}
+    name: Int, src_name: ℤ), is_private: False, prefix_safe: False, prefix_reason: Not namespace prefix, range: {"start": {"line": 110, "column": 23}, "stop": {"line": 110, "column": 24}}
+current_theorem_name: P, replace_signature_symbols: 0, replace_value_symbols: 0
+statement internal_name: ['Nat', 'gcd_eq_gcd_ab'], kind: theorem, theorem name: gcd_eq_gcd_ab
+statement_name: gcd_eq_gcd_ab, signature_symbols: 4
+    name: Int, src_name: ℤ), is_private: False, prefix_safe: False, prefix_reason: Not namespace prefix, range: {"start": {"line": 126, "column": 36}, "stop": {"line": 126, "column": 37}}
+    name: Nat.gcd, src_name: gcd, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 126, "column": 26}, "stop": {"line": 126, "column": 28}}
+    name: Nat.gcdA, src_name: gcdA, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 126, "column": 45}, "stop": {"line": 126, "column": 48}}
+    name: Nat.gcdB, src_name: gcdB, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 126, "column": 60}, "stop": {"line": 126, "column": 63}}
+statement_name: gcd_eq_gcd_ab, value_symbols: 5
+    name: Nat.xgcdAux_P, src_name: xgcdAux_P, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 127, "column": 12}, "stop": {"line": 127, "column": 20}}
+    name: Nat.P, src_name: P, is_private: True, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 127, "column": 48}, "stop": {"line": 127, "column": 48}}
+    name: Nat.P, src_name: P, is_private: True, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 127, "column": 62}, "stop": {"line": 127, "column": 62}}
+    name: Nat.xgcdAux_val, src_name: xgcdAux_val, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 128, "column": 8}, "stop": {"line": 128, "column": 18}}
+    name: Nat.xgcd_val, src_name: xgcd_val, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 128, "column": 21}, "stop": {"line": 128, "column": 28}}
+replace check stmt_name: gcdA: {"name": "Nat.gcdA", "src_name": "gcdA", "range": {"start": {"line": 126, "column": 45}, "stop": {"line": 126, "column": 48}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace exclude symbol in namespace and statement before current: {"name": "Nat.gcdA", "src_name": "gcdA", "range": {"start": {"line": 126, "column": 45}, "stop": {"line": 126, "column": 48}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: gcdB: {"name": "Nat.gcdB", "src_name": "gcdB", "range": {"start": {"line": 126, "column": 60}, "stop": {"line": 126, "column": 63}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace exclude symbol in namespace and statement before current: {"name": "Nat.gcdB", "src_name": "gcdB", "range": {"start": {"line": 126, "column": 60}, "stop": {"line": 126, "column": 63}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: xgcdAux_val: {"name": "Nat.xgcdAux_val", "src_name": "xgcdAux_val", "range": {"start": {"line": 128, "column": 8}, "stop": {"line": 128, "column": 18}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace exclude symbol in namespace and statement before current: {"name": "Nat.xgcdAux_val", "src_name": "xgcdAux_val", "range": {"start": {"line": 128, "column": 8}, "stop": {"line": 128, "column": 18}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: xgcd_val: {"name": "Nat.xgcd_val", "src_name": "xgcd_val", "range": {"start": {"line": 128, "column": 21}, "stop": {"line": 128, "column": 28}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace exclude symbol in namespace and statement before current: {"name": "Nat.xgcd_val", "src_name": "xgcd_val", "range": {"start": {"line": 128, "column": 21}, "stop": {"line": 128, "column": 28}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: xgcdAux_P: {"name": "Nat.xgcdAux_P", "src_name": "xgcdAux_P", "range": {"start": {"line": 127, "column": 12}, "stop": {"line": 127, "column": 20}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace exclude symbol in namespace and statement before current: {"name": "Nat.xgcdAux_P", "src_name": "xgcdAux_P", "range": {"start": {"line": 127, "column": 12}, "stop": {"line": 127, "column": 20}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: gcdA: {"name": "Nat.gcdA", "src_name": "gcdA", "range": {"start": {"line": 126, "column": 45}, "stop": {"line": 126, "column": 48}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace symbol with statement: {"name": "Nat.gcdA", "src_name": "gcdA", "range": {"start": {"line": 126, "column": 45}, "stop": {"line": 126, "column": 48}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: gcdB: {"name": "Nat.gcdB", "src_name": "gcdB", "range": {"start": {"line": 126, "column": 60}, "stop": {"line": 126, "column": 63}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace symbol with statement: {"name": "Nat.gcdB", "src_name": "gcdB", "range": {"start": {"line": 126, "column": 60}, "stop": {"line": 126, "column": 63}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+current_theorem_name: gcd_eq_gcd_ab, replace_signature_symbols: 2, replace_value_symbols: 0
+replaceContent: symbol {"name": "Nat.gcdB", "src_name": "gcdB", "range": {"start": {"line": 126, "column": 60}, "stop": {"line": 126, "column": 63}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}, range: {"start": {"line": 126, "column": 23}, "stop": {"line": 126, "column": 68}}
+replaceContent: symbol {"name": "Nat.gcdA", "src_name": "gcdA", "range": {"start": {"line": 126, "column": 45}, "stop": {"line": 126, "column": 48}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}, range: {"start": {"line": 126, "column": 23}, "stop": {"line": 126, "column": 68}}
+scopeInfo check fileRange: {"start": {"line": 123, "column": 1}, "stop": {"line": 128, "column": 38}}
+add texts: namespace Nat, {"kind": "namespace", "name": "Nat", "content": "namespace Nat", "range": {"start": {"line": 37, "column": 1}, "stop": {"line": 147, "column": 8}}, "index": 0}
+add texts: section, {"kind": "section", "name": null, "content": "section", "range": {"start": {"line": 105, "column": 1}, "stop": {"line": 130, "column": 4}}, "index": 0}
+add exclude namespace range: {"kind": "namespace", "name": "Int", "content": "namespace Int", "range": {"start": {"line": 152, "column": 1}, "stop": {"line": 257, "column": 8}}, "index": 0}
+add exclude section range: {"kind": "section", "name": "GroupWithZero", "content": "section GroupWithZero", "range": {"start": {"line": 269, "column": 1}, "stop": {"line": 287, "column": 18}}, "index": 0}
+add exclude section range: {"kind": "section", "name": "CommGroupWithZero", "content": "section CommGroupWithZero", "range": {"start": {"line": 289, "column": 1}, "stop": {"line": 299, "column": 22}}, "index": 0}
+add ex_text: namespace Nat, ex_text.rangepos: {"line": 37, "column": 1}
+add ex_text: section, ex_text.rangepos: {"line": 105, "column": 1}
+add entry: variable (x y : ℕ), entry.range: {"start": {"line": 107, "column": 1}, "stop": {"line": 107, "column": 19}}
+add post_text: end, ex_text.range: {"line": 130, "column": 4}, blockIndex: -2
+add post_text: end Nat, ex_text.range: {"line": 147, "column": 8}, blockIndex: -1
+
+---------------------- DIFF -----------------------
++ theorem LeanTest.gcd_eq_gcd_ab : (gcd x y : ℤ) = x * Nat.gcdA x y + y * Nat.gcdB x y  := by
++   have := @xgcdAux_P x y x y 1 0 0 1 (by simp [P]) (by simp [P])
++   rwa [xgcdAux_val, xgcd_val] at this
+- namespace Int
+- theorem LeanTest.gcd_eq_gcd_ab : ∀ x y : ℤ, (gcd x y : ℤ) = x * gcdA x y + y * gcdB x y 
+-   | (m : ℕ), (n : ℕ) => _root_.Nat.gcd_eq_gcd_ab _ _
+-   | (m : ℕ), -[n+1] =>
+-     show (_ : ℤ) = _ + -(n + 1) * -_ by rw [Int.neg_mul_neg]; apply _root_.Nat.gcd_eq_gcd_ab
+-   | -[m+1], (n : ℕ) =>
+-     show (_ : ℤ) = -(m + 1) * -_ + _ by rw [Int.neg_mul_neg]; apply _root_.Nat.gcd_eq_gcd_ab
+-   | -[m+1], -[n+1] =>
+-     show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_ by
+-       rw [Int.neg_mul_neg, Int.neg_mul_neg]
+-       apply _root_.Nat.gcd_eq_gcd_ab
+- end Int
+- 
+---------------------- Source Code ------------------
+import Mathlib.Algebra.GroupWithZero.Semiconj
+import Mathlib.Algebra.Group.Commute.Units
+import Mathlib.Data.Set.Operations
+import Mathlib.Order.Basic
+import Mathlib.Order.Bounds.Defs
+import Mathlib.Algebra.Group.Int.Defs
+import Mathlib.Data.Int.Basic
+import Mathlib.Algebra.Divisibility.Basic
+import Mathlib.Algebra.Group.Nat.Defs
+import Mathlib.Data.Int.GCD -- module name
+namespace Nat
+section
+variable (x y : ℕ)
+private def P : ℕ × ℤ × ℤ → Prop 
+  | (r, s, t) => (r : ℤ) = x * s + y * t
+theorem LeanTest.gcd_eq_gcd_ab : (gcd x y : ℤ) = x * Nat.gcdA x y + y * Nat.gcdB x y  := by
+  have := @xgcdAux_P x y x y 1 0 0 1 (by simp [P]) (by simp [P])
+  rwa [xgcdAux_val, xgcd_val] at this
+end
+end Nat
+
+=====================================================
+module: Mathlib.Data.Int.GCD, theorem: exists_mul_emod_eq_gcd pass testing
+module: Mathlib.Data.Int.GCD, theorem: exists_mul_emod_eq_one_of_coprime pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_def pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_eq_gcd_ab pass testing
+module: Mathlib.Data.Int.GCD, theorem: lcm_def pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_eq_one_of_gcd_mul_right_eq_one_left pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_eq_one_of_gcd_mul_right_eq_one_right pass testing
+module: Mathlib.Data.Int.GCD, theorem: ne_zero_of_gcd pass testing
+module: Mathlib.Data.Int.GCD, theorem: exists_gcd_one pass testing
+module: Mathlib.Data.Int.GCD, theorem: exists_gcd_one' pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_dvd_iff pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_greatest pass testing
+module: Mathlib.Data.Int.GCD, theorem: dvd_of_dvd_mul_left_of_gcd_one pass testing
+module: Mathlib.Data.Int.GCD, theorem: dvd_of_dvd_mul_right_of_gcd_one pass testing
+module: Mathlib.Data.Int.GCD, theorem: gcd_least_linear pass testing
+module: Mathlib.Data.Int.GCD, theorem: pow_gcd_eq_one pass testing
+module: Mathlib.Data.Int.GCD, theorem: Commute.pow_eq_pow_iff_of_coprime pass testing
+module: Mathlib.Data.Int.GCD, theorem: pow_eq_pow_iff_of_coprime pass testing
+module: Mathlib.Data.Int.GCD, theorem: pow_mem_range_pow_of_coprime pass testing
+Execute finished: Total failures: 1/30
