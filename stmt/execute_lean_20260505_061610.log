@@ -1,0 +1,118 @@
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_bool pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_eq_sum_ones pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_extend_by_one pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_eq_one pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_congr pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_eq_single pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_eq_mul pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: eq_of_subsingleton_of_prod_eq pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_option pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_eq_mul_prod_subtype_ne pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Finset.card_pi pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_piFinset pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_piFinset_const pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_pi pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_pi_const pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_sigma pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: prod_sigma' pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_sigma pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_filter_piFinset_eq_of_mem pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_filter_piFinset_const_eq_of_mem pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_filter_piFinset_eq pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_filter_piFinset_const pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.card_fun pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: card_vector pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fin.prod_univ_eq_prod_range pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Finset.prod_fin_eq_prod_range pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Finset.prod_toFinset_eq_subtype pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_dite fails with /home/linfe/math/lean_test/.test/Mathlib.Data.Fintype.BigOperators/Fintype.prod_dite.lean:19:2: error: No goals to be solved
+
+---------------------- DEBUG -----------------------
+statement.name: |Fintype.prod_dite| namespace: |Fintype|
+    processing statement: Fintype.prod_dite, Fintype.prod_dite kind: theorem, id: 27, dependent_statements: {27}, persistant_symbol_names: dict_keys([])
+      finish processing statement: Fintype.prod_dite, request_id: 27
+statement internal_name: ['Fintype', 'prod_dite'], kind: theorem, theorem name: Fintype.prod_dite
+statement_name: Fintype.prod_dite, signature_symbols: 10
+    name: Fintype, src_name: Fintype, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 226, "column": 35}, "stop": {"line": 226, "column": 41}}
+    name: DecidablePred, src_name: DecidablePred, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 226, "column": 62}, "stop": {"line": 226, "column": 74}}
+    name: CommMonoid, src_name: CommMonoid, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 226, "column": 80}, "stop": {"line": 226, "column": 89}}
+    name: Not, src_name: ¬p a , is_private: False, prefix_safe: False, prefix_reason: Not ident with (space),([{, range: {"start": {"line": 227, "column": 34}, "stop": {"line": 227, "column": 38}}
+    name: Finset.univ, src_name: a,, is_private: False, prefix_safe: False, prefix_reason: Not namespace prefix, range: {"start": {"line": 228, "column": 8}, "stop": {"line": 228, "column": 9}}
+    name: dite, src_name: dite, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 228, "column": 11}, "stop": {"line": 228, "column": 14}}
+    name: Subtype, src_name: { a // p a },, is_private: False, prefix_safe: False, prefix_reason: Not ident with (space),([{, range: {"start": {"line": 229, "column": 12}, "stop": {"line": 229, "column": 24}}
+    name: Subtype.property, src_name: 2), is_private: False, prefix_safe: False, prefix_reason: Not ident with none ident characters, range: {"start": {"line": 229, "column": 32}, "stop": {"line": 229, "column": 33}}
+    name: Not, src_name: ¬p a , is_private: False, prefix_safe: False, prefix_reason: Not ident with (space),([{, range: {"start": {"line": 229, "column": 50}, "stop": {"line": 229, "column": 54}}
+    name: Subtype.property, src_name: 2 , is_private: False, prefix_safe: False, prefix_reason: Not ident with none ident characters, range: {"start": {"line": 229, "column": 64}, "stop": {"line": 229, "column": 65}}
+statement_name: Fintype.prod_dite, value_symbols: 9
+    name: Finset.prod_dite, src_name: prod_dite, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 230, "column": 14}, "stop": {"line": 230, "column": 22}}
+    name: Equiv.subtypeEquivRight, src_name: Equiv.subtypeEquivRight, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 232, "column": 12}, "stop": {"line": 232, "column": 34}}
+    name: Equiv.prod_comp, src_name: prod_comp, is_private: False, prefix_safe: False, prefix_reason: prefix ., range: {"start": {"line": 232, "column": 48}, "stop": {"line": 232, "column": 56}}
+    name: Subtype, src_name: { x // p x } , is_private: False, prefix_safe: False, prefix_reason: Not ident with (space),([{, range: {"start": {"line": 232, "column": 66}, "stop": {"line": 232, "column": 78}}
+    name: Subtype.property, src_name: 2
+, is_private: False, prefix_safe: False, prefix_reason: Not ident with none ident characters, range: {"start": {"line": 232, "column": 88}, "stop": {"line": 232, "column": 89}}
+    name: Equiv.subtypeEquivRight, src_name: Equiv.subtypeEquivRight, is_private: False, prefix_safe: True, prefix_reason: None, range: {"start": {"line": 233, "column": 12}, "stop": {"line": 233, "column": 34}}
+    name: Equiv.prod_comp, src_name: prod_comp, is_private: False, prefix_safe: False, prefix_reason: prefix ., range: {"start": {"line": 233, "column": 48}, "stop": {"line": 233, "column": 56}}
+    name: Not, src_name: ¬p x , is_private: False, prefix_safe: False, prefix_reason: Not ident with (space),([{, range: {"start": {"line": 233, "column": 73}, "stop": {"line": 233, "column": 77}}
+    name: Subtype.property, src_name: 2
+, is_private: False, prefix_safe: False, prefix_reason: Not ident with none ident characters, range: {"start": {"line": 233, "column": 89}, "stop": {"line": 233, "column": 90}}
+replace symbol with recursive: {"name": "Fintype.LeanTest.prod_dite", "src_name": "Fintype.prod_dite", "range": {"start": {"line": 226, "column": 16}, "stop": {"line": 226, "column": 32}}, "is_private": true, "prefix_safe": true, "prefix_reason": null}
+replace symbol with open conflict: {"name": "Finset.prod_dite", "src_name": "prod_dite", "range": {"start": {"line": 230, "column": 14}, "stop": {"line": 230, "column": 22}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+replace check stmt_name: Fintype.prod_dite: {"name": "Finset.prod_dite", "src_name": "prod_dite", "range": {"start": {"line": 230, "column": 14}, "stop": {"line": 230, "column": 22}}, "is_private": false, "prefix_safe": true, "prefix_reason": null}
+    name: Finset.prod_dite, src_name: prod_dite in tactic: simp
+current_theorem_name: Fintype.prod_dite, replace_signature_symbols: 0, replace_value_symbols: 0
+scopeInfo check fileRange: {"start": {"line": 226, "column": 1}, "stop": {"line": 233, "column": 90}}
+add exclude namespace range: {"kind": "namespace", "name": "Fintype", "content": "namespace Fintype", "range": {"start": {"line": 36, "column": 1}, "stop": {"line": 89, "column": 12}}, "index": 0}
+add exclude section range: {"kind": "section", "name": null, "content": "section", "range": {"start": {"line": 44, "column": 1}, "stop": {"line": 55, "column": 4}}, "index": 0}
+add exclude section range: {"kind": "section", "name": null, "content": "section", "range": {"start": {"line": 57, "column": 1}, "stop": {"line": 87, "column": 4}}, "index": 0}
+add exclude section range: {"kind": "section", "name": null, "content": "section", "range": {"start": {"line": 93, "column": 1}, "stop": {"line": 107, "column": 4}}, "index": 0}
+add exclude section range: {"kind": "section", "name": "Pi", "content": "section Pi", "range": {"start": {"line": 109, "column": 1}, "stop": {"line": 191, "column": 7}}, "index": 0}
+add exclude namespace range: {"kind": "namespace", "name": "Fintype", "content": "namespace Fintype", "range": {"start": {"line": 115, "column": 1}, "stop": {"line": 190, "column": 12}}, "index": 0}
+add exclude section range: {"kind": "section", "name": null, "content": "section", "range": {"start": {"line": 235, "column": 1}, "stop": {"line": 277, "column": 4}}, "index": 0}
+add entry: open Mathlib, entry.range: {"start": {"line": 30, "column": 1}, "stop": {"line": 30, "column": 13}}
+add entry: universe u v, entry.range: {"start": {"line": 32, "column": 1}, "stop": {"line": 32, "column": 13}}
+add entry: variable {α : Type*} {β : Type*} {γ : Type*}, entry.range: {"start": {"line": 34, "column": 1}, "stop": {"line": 34, "column": 45}}
+exclude variable: open Finset, variable.fileRange: {"start": {"line": 46, "column": 1}, "stop": {"line": 46, "column": 12}}, exclude_section_range: [LeanFileRange(start=LeanFilePos(line=36, column=1), stop=LeanFilePos(line=89, column=12)), LeanFileRange(start=LeanFilePos(line=44, column=1), stop=LeanFilePos(line=55, column=4)), LeanFileRange(start=LeanFilePos(line=57, column=1), stop=LeanFilePos(line=87, column=4)), LeanFileRange(start=LeanFilePos(line=93, column=1), stop=LeanFilePos(line=107, column=4)), LeanFileRange(start=LeanFilePos(line=109, column=1), stop=LeanFilePos(line=191, column=7)), LeanFileRange(start=LeanFilePos(line=115, column=1), stop=LeanFilePos(line=190, column=12)), LeanFileRange(start=LeanFilePos(line=235, column=1), stop=LeanFilePos(line=277, column=4)), LeanFileRange(start=LeanFilePos(line=233, column=90), stop=LeanFilePos(line=9223372036854775807, column=9223372036854775807))]
+exclude variable: variable {ι : Type*} [DecidableEq ι] [Fintype ι], variable.fileRange: {"start": {"line": 48, "column": 1}, "stop": {"line": 48, "column": 49}}, exclude_section_range: [LeanFileRange(start=LeanFilePos(line=36, column=1), stop=LeanFilePos(line=89, column=12)), LeanFileRange(start=LeanFilePos(line=44, column=1), stop=LeanFilePos(line=55, column=4)), LeanFileRange(start=LeanFilePos(line=57, column=1), stop=LeanFilePos(line=87, column=4)), LeanFileRange(start=LeanFilePos(line=93, column=1), stop=LeanFilePos(line=107, column=4)), LeanFileRange(start=LeanFilePos(line=109, column=1), stop=LeanFilePos(line=191, column=7)), LeanFileRange(start=LeanFilePos(line=115, column=1), stop=LeanFilePos(line=190, column=12)), LeanFileRange(start=LeanFilePos(line=235, column=1), stop=LeanFilePos(line=277, column=4)), LeanFileRange(start=LeanFilePos(line=233, column=90), stop=LeanFilePos(line=9223372036854775807, column=9223372036854775807))]
+exclude variable: variable {M : Type*} [Fintype α] [CommMonoid M], variable.fileRange: {"start": {"line": 59, "column": 1}, "stop": {"line": 59, "column": 48}}, exclude_section_range: [LeanFileRange(start=LeanFilePos(line=36, column=1), stop=LeanFilePos(line=89, column=12)), LeanFileRange(start=LeanFilePos(line=44, column=1), stop=LeanFilePos(line=55, column=4)), LeanFileRange(start=LeanFilePos(line=57, column=1), stop=LeanFilePos(line=87, column=4)), LeanFileRange(start=LeanFilePos(line=93, column=1), stop=LeanFilePos(line=107, column=4)), LeanFileRange(start=LeanFilePos(line=109, column=1), stop=LeanFilePos(line=191, column=7)), LeanFileRange(start=LeanFilePos(line=115, column=1), stop=LeanFilePos(line=190, column=12)), LeanFileRange(start=LeanFilePos(line=235, column=1), stop=LeanFilePos(line=277, column=4)), LeanFileRange(start=LeanFilePos(line=233, column=90), stop=LeanFilePos(line=9223372036854775807, column=9223372036854775807))]
+add entry: open Finset, entry.range: {"start": {"line": 91, "column": 1}, "stop": {"line": 91, "column": 12}}
+exclude variable: variable {M : Type*} [Fintype α] [CommMonoid M], variable.fileRange: {"start": {"line": 95, "column": 1}, "stop": {"line": 95, "column": 48}}, exclude_section_range: [LeanFileRange(start=LeanFilePos(line=36, column=1), stop=LeanFilePos(line=89, column=12)), LeanFileRange(start=LeanFilePos(line=44, column=1), stop=LeanFilePos(line=55, column=4)), LeanFileRange(start=LeanFilePos(line=57, column=1), stop=LeanFilePos(line=87, column=4)), LeanFileRange(start=LeanFilePos(line=93, column=1), stop=LeanFilePos(line=107, column=4)), LeanFileRange(start=LeanFilePos(line=109, column=1), stop=LeanFilePos(line=191, column=7)), LeanFileRange(start=LeanFilePos(line=115, column=1), stop=LeanFilePos(line=190, column=12)), LeanFileRange(start=LeanFilePos(line=235, column=1), stop=LeanFilePos(line=277, column=4)), LeanFileRange(start=LeanFilePos(line=233, column=90), stop=LeanFilePos(line=9223372036854775807, column=9223372036854775807))]
+exclude variable: variable {ι κ : Type*} {α : ι → Type*} [DecidableEq ι] [DecidableEq κ], variable.fileRange: {"start": {"line": 110, "column": 1}, "stop": {"line": 110, "column": 71}}, exclude_section_range: [LeanFileRange(start=LeanFilePos(line=36, column=1), stop=LeanFilePos(line=89, column=12)), LeanFileRange(start=LeanFilePos(line=44, column=1), stop=LeanFilePos(line=55, column=4)), LeanFileRange(start=LeanFilePos(line=57, column=1), stop=LeanFilePos(line=87, column=4)), LeanFileRange(start=LeanFilePos(line=93, column=1), stop=LeanFilePos(line=107, column=4)), LeanFileRange(start=LeanFilePos(line=109, column=1), stop=LeanFilePos(line=191, column=7)), LeanFileRange(start=LeanFilePos(line=115, column=1), stop=LeanFilePos(line=190, column=12)), LeanFileRange(start=LeanFilePos(line=235, column=1), stop=LeanFilePos(line=277, column=4)), LeanFileRange(start=LeanFilePos(line=233, column=90), stop=LeanFilePos(line=9223372036854775807, column=9223372036854775807))]
+exclude variable: variable [Fintype ι], variable.fileRange: {"start": {"line": 117, "column": 1}, "stop": {"line": 117, "column": 21}}, exclude_section_range: [LeanFileRange(start=LeanFilePos(line=36, column=1), stop=LeanFilePos(line=89, column=12)), LeanFileRange(start=LeanFilePos(line=44, column=1), stop=LeanFilePos(line=55, column=4)), LeanFileRange(start=LeanFilePos(line=57, column=1), stop=LeanFilePos(line=87, column=4)), LeanFileRange(start=LeanFilePos(line=93, column=1), stop=LeanFilePos(line=107, column=4)), LeanFileRange(start=LeanFilePos(line=109, column=1), stop=LeanFilePos(line=191, column=7)), LeanFileRange(start=LeanFilePos(line=115, column=1), stop=LeanFilePos(line=190, column=12)), LeanFileRange(start=LeanFilePos(line=235, column=1), stop=LeanFilePos(line=277, column=4)), LeanFileRange(start=LeanFilePos(line=233, column=90), stop=LeanFilePos(line=9223372036854775807, column=9223372036854775807))]
+
+---------------------- DIFF -----------------------
+-   simp only [Finset.prod_dite]
+?              -------
+
++   simp only [prod_dite]
+- 
+---------------------- Source Code ------------------
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+import Mathlib.Algebra.BigOperators.Option
+import Mathlib.Data.Fintype.Option
+import Mathlib.Data.Fintype.Prod
+import Mathlib.Data.Fintype.Sigma
+import Mathlib.Data.Fintype.Sum
+import Mathlib.Data.Fintype.Vector
+import Mathlib.Data.Fintype.BigOperators -- module name
+open Mathlib
+universe u v
+variable {α : Type*} {β : Type*} {γ : Type*}
+open Finset
+nonrec theorem Fintype.LeanTest.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoid β]
+    (f : ∀ a, p a → β) (g : ∀ a, ¬p a → β) :
+    (∏ a, dite (p a) (f a) (g a)) =
+    (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2  := by
+  simp only [prod_dite]
+  congr 1
+  · exact (Equiv.subtypeEquivRight <| by simp).prod_comp fun x : { x // p x } => f x x.2
+  · exact (Equiv.subtypeEquivRight <| by simp).prod_comp fun x : { x // ¬p x } => g x x.2
+
+=====================================================
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_sumElim pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_sum_type pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_prod_type pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_prod_type' pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_prod_type_right pass testing
+module: Mathlib.Data.Fintype.BigOperators, theorem: Fintype.prod_prod_type_right' pass testing
+Execute finished: Total failures: 1/34
